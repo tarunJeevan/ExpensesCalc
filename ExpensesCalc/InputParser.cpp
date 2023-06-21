@@ -8,7 +8,8 @@ InputParser::InputParser(std::string_view line)
 	enum class States
 	{
 		ReadyForText,
-		TextBegin
+		TextBegin,
+		IgnoreSpaces
 	} state = States::ReadyForText;
 
 	std::stringstream ss;
@@ -21,12 +22,16 @@ InputParser::InputParser(std::string_view line)
 			{
 			case ' ':
 				break;
+			case '"':
+				state = States::IgnoreSpaces;
+				break;
 			default:
 				ss << c;
 				state = States::TextBegin;
 				break;
 			}
 			break;
+
 		case States::TextBegin:
 			switch (c)
 			{
@@ -40,6 +45,19 @@ InputParser::InputParser(std::string_view line)
 				break;
 			}
 			break;
+
+		case States::IgnoreSpaces:
+			switch (c)
+			{
+			case '"':
+				m_args.emplace_back(ss.str());
+				ss.str("");
+				state = States::ReadyForText;
+				break;
+			default:
+				ss << c;
+				break;
+			}
 		}
 	}
 

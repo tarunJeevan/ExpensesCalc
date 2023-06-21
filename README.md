@@ -17,3 +17,7 @@ Format:
     - exp Label 0.00
     - add Label 0.00
     - del Label 0.00
+
+Todo:
+    - Add time stamps to entries
+    - Add auto-fill to UI
