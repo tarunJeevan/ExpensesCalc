@@ -17,7 +17,9 @@ void ExpSheet::Entry::Deserialize(std::istream& in)
     do
     {
         in.read(&c, 1);
-        ss << c;
+        if (c != '\0')
+            ss << c;
+
     } while (c != '\0');
 
     label = ss.str();
@@ -26,10 +28,15 @@ void ExpSheet::Entry::Deserialize(std::istream& in)
 
 bool ExpSheet::Open(const std::filesystem::path& dataFile)
 {
-    std::ifstream fileIn(dataFile, std::ios::in | std::ios::binary);
+    auto path = dataFile;
+    path.replace_extension(".pexc");
+
+    std::ifstream fileIn(path, std::ios::in | std::ios::binary);
 
     if (fileIn.is_open())
     {
+        m_path = path;
+
         size_t numElements = 0;
         fileIn.read((char*)&numElements, sizeof(size_t));
         m_entries.clear();
@@ -49,11 +56,16 @@ bool ExpSheet::Open(const std::filesystem::path& dataFile)
 bool ExpSheet::Save(const std::filesystem::path& dataFile) const
 {
     auto path = dataFile;
-    path.remove_filename();
-    if (!path.empty())
-        std::filesystem::create_directories(path);
+ 
+    if (dataFile.empty())
+        if (m_path.empty())
+            return false;
+        else
+            path = m_path;
 
-    std::ofstream fileOut(dataFile, std::ios::out | std::ios::trunc | std::ios::binary);
+    path.replace_extension(".pexc");
+
+    std::ofstream fileOut(path, std::ios::out | std::ios::trunc | std::ios::binary);
 
     if (fileOut.is_open())
     {
@@ -67,6 +79,12 @@ bool ExpSheet::Save(const std::filesystem::path& dataFile) const
         return true;
     }
     return false;
+}
+
+void ExpSheet::Clear()
+{
+    m_path = "";
+    m_entries.clear();
 }
 
 bool ExpSheet::Add(std::string_view label, double val)

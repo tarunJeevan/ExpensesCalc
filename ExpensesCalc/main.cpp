@@ -5,10 +5,22 @@
 #include "ExpSheet.h"
 #include "InputParser.h"
 
-int main()
+int main(int argc, char** argv)
 {
-	std::string line;
 	ExpSheet expenses;
+
+	// Check if user wants to open a specific expense sheet
+	if (argc == 2)
+	{
+		std::filesystem::path path = argv[1];
+		expenses.Open(path);
+	}
+	else if (argc > 2)
+	{
+		std::cout << "Invalid format. Usage: <APP> <FILEPATH>" << std::endl;
+	}
+
+	std::string line;
 
 	// Create enum to handle different commands?
 	
@@ -77,7 +89,6 @@ int main()
 			if (args.Count() == 1)
 			{
 				std::filesystem::path p = args[0];
-				p.replace_extension(".dat");
 
 				if (!expenses.Open(p))
 				{
@@ -92,15 +103,26 @@ int main()
 			if (args.Count() == 1)
 			{
 				std::filesystem::path p = args[0];
-				p.replace_extension(".dat");
 
 				if (!expenses.Save(p))
 				{
 					std::cout << "Failed to save file!" << std::endl;
 				}
 			}
+			else if (args.Count() == 0)
+			{
+				if (!expenses.Save())
+				{
+					std::cout << "Failed to save file! Try: save <PATH>" << std::endl;
+				}
+			}
 			else
 				std::cout << "Usage: save <path>" << std::endl;
+		}
+		else if (cmd == "clear")
+		{
+			expenses.Clear();
+			std::cout << "Expense sheet cleared!" << std::endl;
 		}
 		else
 		{
