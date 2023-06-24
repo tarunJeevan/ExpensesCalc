@@ -3,6 +3,72 @@
 
 #include "ExpSheet.h"
 
+void ExpSheet::Entry::Serialize(std::ostream& out) const
+{
+    out.write(label.c_str(), label.length() + 1);
+    out.write((char*)&value, sizeof(double));
+}
+
+void ExpSheet::Entry::Deserialize(std::istream& in)
+{
+    std::stringstream ss;
+    char c;
+
+    do
+    {
+        in.read(&c, 1);
+        ss << c;
+    } while (c != '\0');
+
+    label = ss.str();
+    in.read((char*)&value, sizeof(double));
+}
+
+bool ExpSheet::Open(const std::filesystem::path& dataFile)
+{
+    std::ifstream fileIn(dataFile, std::ios::in | std::ios::binary);
+
+    if (fileIn.is_open())
+    {
+        size_t numElements = 0;
+        fileIn.read((char*)&numElements, sizeof(size_t));
+        m_entries.clear();
+        
+        for (size_t i = 0; i < numElements; i++)
+        {
+            Entry e;
+            e.Deserialize(fileIn);
+            m_entries.emplace_back(std::move(e));
+        }
+
+        return true;
+    }
+    return false;
+}
+
+bool ExpSheet::Save(const std::filesystem::path& dataFile) const
+{
+    auto path = dataFile;
+    path.remove_filename();
+    if (!path.empty())
+        std::filesystem::create_directories(path);
+
+    std::ofstream fileOut(dataFile, std::ios::out | std::ios::trunc | std::ios::binary);
+
+    if (fileOut.is_open())
+    {
+        size_t numElements = m_entries.size(); // Dumb way of doing this. Research better way
+        fileOut.write((char*)&numElements, sizeof(size_t));
+
+        for (const Entry& e : m_entries)
+        {
+            e.Serialize(fileOut);
+        }
+        return true;
+    }
+    return false;
+}
+
 bool ExpSheet::Add(std::string_view label, double val)
 {
     Entry e;

@@ -9,8 +9,8 @@ CMD(s):
     - exp (add expenses)
     - add (add revenue)
     - del (remove expenses or revenue)
-    - list (list all expenses, revenue, and total balance)
-    - eval (evaluate expenses)
+    - list (list all expenses and revenue)
+    - eval (evaluate expenses and list balance)
     - exit (exit the application)
 
 Format:
@@ -21,3 +21,7 @@ Format:
 Todo:
     - Add time stamps to entries
     - Add auto-fill to UI
+
+Log:
+    - Added desired basic functionality (06/21/2023)
+    - Added basic serialization (06/23/2023)

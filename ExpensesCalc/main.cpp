@@ -69,9 +69,38 @@ int main()
 		}
 		else if (cmd == "eval")
 		{
-			//std::cout << "EVALUATE" << std::endl;
 			auto total = expenses.Eval();
 			std::cout << "Total: " << std::fixed << std::setprecision(2) << total << std::endl;
+		}
+		else if (cmd == "open")
+		{
+			if (args.Count() == 1)
+			{
+				std::filesystem::path p = args[0];
+				p.replace_extension(".dat");
+
+				if (!expenses.Open(p))
+				{
+					std::cout << "Failed to open file!" << std::endl;
+				}
+			}
+			else
+				std::cout << "Usage: open <path>" << std::endl;
+		}
+		else if (cmd == "save")
+		{
+			if (args.Count() == 1)
+			{
+				std::filesystem::path p = args[0];
+				p.replace_extension(".dat");
+
+				if (!expenses.Save(p))
+				{
+					std::cout << "Failed to save file!" << std::endl;
+				}
+			}
+			else
+				std::cout << "Usage: save <path>" << std::endl;
 		}
 		else
 		{

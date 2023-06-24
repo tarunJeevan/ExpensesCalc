@@ -3,3 +3,6 @@
 
 # Ignore build output
 /build
+
+# Ignore serialized data 
+/work
