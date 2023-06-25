@@ -18,8 +18,10 @@ A customized expenses calculator since Excel isn't for me. It'll start off prett
 - Add time stamps to entries
 - Add auto-fill to UI
 - Add auto-saving OR Warning to save before user closes application
+- Optimize export code
 
 **Log:**
 - Added desired basic functionality (06/21/2023)
 - Added basic serialization (06/23/2023)
 - Created release build with basic serialization (06/24/2023)
+- Added CSV and HTML file export options (06/24/2023)

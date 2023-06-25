@@ -124,6 +124,34 @@ int main(int argc, char** argv)
 			expenses.Clear();
 			std::cout << "Expense sheet cleared!" << std::endl;
 		}
+		else if (cmd == "export")
+		{
+			if (args.Count() == 2)
+			{
+				if (args[0] == "csv")
+				{
+					if (expenses.ExportCSV(args[1]))
+						std::cout << "Export to CSV successful!" << std::endl;
+					else
+						std::cout << "Export unsuccessful!" << std::endl;
+				}
+				else if (args[0] == "html")
+				{
+					if (expenses.ExportHTML(args[1]))
+						std::cout << "Export to HTML successful!" << std::endl;
+					else
+						std::cout << "Export unsuccessful!" << std::endl;
+				}
+				else
+				{
+					std::cout << "Usage: export <csv/html> <FILE>" << std::endl;
+				}
+			}
+			else
+			{
+				std::cout << "Usage: export <csv/html> <FILE>" << std::endl;
+			}
+		}
 		else
 		{
 			std::cout << "Command \'" << cmd << "\' invalid" << std::endl;

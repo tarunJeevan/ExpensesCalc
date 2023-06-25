@@ -41,12 +41,21 @@ public:
 
 	bool Open(const std::filesystem::path& dataFile);
 	bool Save(const std::filesystem::path& dataFile = "") const;
-
 	void Clear();
+	
 	bool Add(std::string_view label, double val);
 	bool Del(std::string_view label);
 	void List(std::ostream& os) const;
 	double Eval() const;
+
+	bool ExportCSV(const std::filesystem::path& file) const;
+	bool ExportHTML(const std::filesystem::path& file) const;
+
+private:
+	static inline std::string TextHTMLClass(double value)
+	{
+		return (value >= 0) ? "text-success" : "text-danger";
+	}
 
 private:
 	std::filesystem::path m_path;
