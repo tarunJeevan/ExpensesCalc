@@ -116,15 +116,21 @@ bool ExpSheet::Del(std::string_view label)
 	return false;
 }
 
-void ExpSheet::List(std::ostream& os) const
+void ExpSheet::List(bool repl, std::ostream& os) const
 {
 	os << std::fixed << std::setprecision(2);
 
 	size_t index = 0;
 	for (const Entry& e : m_entries)
 	{
-		os << "(" << index << ") " << e.label << " -> " << e.value << std::endl;
+		if (repl)
+			os << ++index << "," << e.label << "," << e.value << "\n";
+		else
+			os << "(" << index << ") " << e.label << " -> " << e.value << "\n";
 	}
+
+	if (repl && index == 0)
+		os << 0 << "\n";
 }
 
 double ExpSheet::Eval() const

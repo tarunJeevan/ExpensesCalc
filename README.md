@@ -13,6 +13,10 @@ A customized expenses calculator since Excel isn't for me. It'll start off prett
 - eval (evaluate expenses and list balance)
 - clear (clear the opened expense sheet)
 - exit (exit the application)
+- save (saves current expense sheet)
+- open (opens a saved expense sheet)
+- export (export current expense sheet as CSV or HTML file)
+- help (list all commands and their functions)
 
 **Todo:**
 - Add time stamps to entries
@@ -25,3 +29,5 @@ A customized expenses calculator since Excel isn't for me. It'll start off prett
 - Added basic serialization (06/23/2023)
 - Created release build with basic serialization (06/24/2023)
 - Added CSV and HTML file export options (06/24/2023)
+- Added help command to list all options (06/25/2023)
+- Added basic REPL functionality (06/25/2023)

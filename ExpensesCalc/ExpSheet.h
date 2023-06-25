@@ -45,7 +45,7 @@ public:
 	
 	bool Add(std::string_view label, double val);
 	bool Del(std::string_view label);
-	void List(std::ostream& os) const;
+	void List(bool repl, std::ostream& os) const;
 	double Eval() const;
 
 	bool ExportCSV(const std::filesystem::path& file) const;
