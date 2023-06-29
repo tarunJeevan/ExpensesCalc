@@ -21,8 +21,7 @@ A customized expenses calculator since Excel isn't for me. It'll start off prett
 **Todo:**
 - Add time stamps to entries
 - Add auto-fill to UI
-- Add auto-saving OR Warning to save before user closes application
-- Optimize export code
+- Optimize REPL mode command line switch
 
 **Log:**
 - Added desired basic functionality (06/21/2023)
@@ -31,3 +30,4 @@ A customized expenses calculator since Excel isn't for me. It'll start off prett
 - Added CSV and HTML file export options (06/24/2023)
 - Added help command to list all options (06/25/2023)
 - Added basic REPL functionality (06/25/2023)
+- Added save warning if current expense sheet hasn't been saved (06/29/2023)

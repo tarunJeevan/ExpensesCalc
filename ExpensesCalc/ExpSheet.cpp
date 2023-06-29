@@ -41,7 +41,7 @@ bool ExpSheet::Open(const std::filesystem::path& dataFile)
 		fileIn.read((char*)&numElements, sizeof(size_t));
 		m_entries.clear();
 
-		for (size_t i = 0; i < numElements; i++)
+		for (size_t i = 0; i < numElements; ++i)
 		{
 			Entry e;
 			e.Deserialize(fileIn);
@@ -53,7 +53,7 @@ bool ExpSheet::Open(const std::filesystem::path& dataFile)
 	return false;
 }
 
-bool ExpSheet::Save(const std::filesystem::path& dataFile) const
+bool ExpSheet::Save(const std::filesystem::path& dataFile)
 {
 	auto path = dataFile;
 
@@ -76,6 +76,8 @@ bool ExpSheet::Save(const std::filesystem::path& dataFile) const
 		{
 			e.Serialize(fileOut);
 		}
+
+		saved = true; // File has been saved
 		return true;
 	}
 	return false;
@@ -85,6 +87,8 @@ void ExpSheet::Clear()
 {
 	m_path = "";
 	m_entries.clear();
+	
+	saved = false; // File has been modified
 }
 
 bool ExpSheet::Add(std::string_view label, double val)
@@ -98,6 +102,7 @@ bool ExpSheet::Add(std::string_view label, double val)
 	if (canInsert)
 		m_entries.emplace_back(std::move(e));
 
+	saved = false; // File has been modified
 	return canInsert;
 }
 
@@ -110,6 +115,8 @@ bool ExpSheet::Del(std::string_view label)
 	if (el != m_entries.end())
 	{
 		m_entries.erase(el);
+		
+		saved = false; // File has been modified
 		return true;
 	}
 
@@ -141,6 +148,11 @@ double ExpSheet::Eval() const
 		total += e.value;
 
 	return total;
+}
+
+bool ExpSheet::isSaved() const
+{
+	return saved;
 }
 
 bool ExpSheet::ExportCSV(const std::filesystem::path& file) const

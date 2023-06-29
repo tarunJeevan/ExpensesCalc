@@ -54,16 +54,46 @@ int main(int argc, char** argv)
 		std::getline(std::cin, line);
 		InputParser input(line);
 		
+		// Parse user input
 		std::string cmd = input[0];
 		std::transform(cmd.begin(), cmd.end(), cmd.begin(), [](char c) { return std::tolower(c); });
 		auto args = input.Subset(1);
 		
-		if (cmd == "exit") // Exit the program
+		// Exit the program
+		if (cmd == "exit") 
 		{
-			Success(repl);
-			return 0;
+			// Check if current expense sheet has been saved
+			if (!expenses.isSaved())
+			{
+				char confirmation;
+				std::cout << "Do you wish to save your changes? (y/n)" << std::endl;
+				std::cin >> confirmation;
+
+				switch (std::tolower(confirmation))
+				{
+					// User wants to save changes
+					case 'y':
+						if (!expenses.Save())
+							Complain(repl, "Failed to save file! Try: save <PATH>");
+						break;
+					// User doesn't want to save changes
+					case 'n':
+						Success(repl);
+						return 0;
+						break;
+					// Invalid response
+					default:
+						std::cout << "Invalid response" << std::endl;
+				}
+			}
+			else
+			{
+				Success(repl);
+				return 0;
+			}
 		}
-		else if (cmd == "add") // Add income
+		// Add income
+		else if (cmd == "add") 
 		{
 			if (args.Count() == 2)
 			{
@@ -78,7 +108,8 @@ int main(int argc, char** argv)
 			else
 				Complain(repl, "Usage: add <LABEL> <VALUE>");
 		}
-		else if (cmd == "exp") // Add an expense
+		// Add an expense
+		else if (cmd == "exp") 
 		{
 			if (args.Count() == 2)
 			{
@@ -93,7 +124,8 @@ int main(int argc, char** argv)
 			else
 				Complain(repl, "Usage: exp <LABEL> <VALUE>");
 		}
-		else if (cmd == "del") // Delete an expense or income
+		// Delete an expense or income
+		else if (cmd == "del") 
 		{
 			if (args.Count() == 1)
 			{
@@ -105,11 +137,13 @@ int main(int argc, char** argv)
 			else
 				Complain(repl, "Usage: del <LABEL>");
 		}
-		else if (cmd == "list") // List all income and expenses
+		// List all income and expenses
+		else if (cmd == "list") 
 		{
 			expenses.List(repl, std::cout);
 		}
-		else if (cmd == "eval") // Evaluate expense sheet and print balance
+		// Evaluate expense sheet and print balance
+		else if (cmd == "eval") 
 		{
 			auto total = expenses.Eval();
 			if (repl)
@@ -117,7 +151,8 @@ int main(int argc, char** argv)
 			else
 				std::cout << "Total: " << std::fixed << std::setprecision(2) << total << std::endl;
 		}
-		else if (cmd == "open") // Open an expense sheet
+		// Open an expense sheet
+		else if (cmd == "open") 
 		{
 			if (args.Count() == 1)
 			{
@@ -131,7 +166,8 @@ int main(int argc, char** argv)
 			else
 				Complain(repl, "Usage: open <PATH>");
 		}
-		else if (cmd == "save") // Save current expense sheet
+		// Save current expense sheet
+		else if (cmd == "save") 
 		{
 			if (args.Count() == 1)
 			{
@@ -152,12 +188,14 @@ int main(int argc, char** argv)
 			else
 				Complain(repl, "Usage: save <PATH>");
 		}
-		else if (cmd == "clear") // Empty current expense sheet
+		// Empty current expense sheet
+		else if (cmd == "clear") 
 		{
 			expenses.Clear();
 			Success(repl);
 		}
-		else if (cmd == "export") // Export current expense sheet
+		// Export current expense sheet
+		else if (cmd == "export") 
 		{
 			if (args.Count() == 2)
 			{
@@ -166,14 +204,14 @@ int main(int argc, char** argv)
 					if (expenses.ExportCSV(args[1]))
 						Success(repl);
 					else
-						Success(repl);
+						std::cout << "Export failed!" << std::endl;
 				}
 				else if (args[0] == "html") // Export to HTML
 				{
 					if (expenses.ExportHTML(args[1]))
 						Success(repl);
 					else
-						Success(repl);
+						std::cout << "Export failed!" << std::endl;
 				}
 				else
 				{
@@ -185,7 +223,8 @@ int main(int argc, char** argv)
 				Complain(repl, "Usage: export <CSV/HTML> <FILE>");
 			}
 		}
-		else if (cmd == "help") // List all commands and their functions
+		// List all commands and their functions
+		else if (cmd == "help") 
 		{
 			std::cout << "\nUsage: CMD [args...]\n\n"
 					"open <PATH> \t\t\t(Open a saved expense sheet)\n"
@@ -199,6 +238,7 @@ int main(int argc, char** argv)
 					"eval \t\t\t\t(Evaluate expense sheet and print balance)\n"
 					"exit \t\t\t\t(Exit the application)\n";
 		}
+		// Invalid command
 		else
 		{
 			Complain(repl, "Command is invalid");

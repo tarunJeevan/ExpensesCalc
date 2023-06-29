@@ -40,13 +40,14 @@ public:
 	ExpSheet& operator =(const ExpSheet&) = default;
 
 	bool Open(const std::filesystem::path& dataFile);
-	bool Save(const std::filesystem::path& dataFile = "") const;
+	bool Save(const std::filesystem::path& dataFile = "");
 	void Clear();
 	
 	bool Add(std::string_view label, double val);
 	bool Del(std::string_view label);
 	void List(bool repl, std::ostream& os) const;
 	double Eval() const;
+	bool isSaved() const;
 
 	bool ExportCSV(const std::filesystem::path& file) const;
 	bool ExportHTML(const std::filesystem::path& file) const;
@@ -60,4 +61,5 @@ private:
 private:
 	std::filesystem::path m_path;
 	std::vector<Entry> m_entries;
+	bool saved;
 };
