@@ -68,13 +68,25 @@ int main(int argc, char** argv)
 				char confirmation;
 				std::cout << "Do you wish to save your changes? (y/n)" << std::endl;
 				std::cin >> confirmation;
+				std::filesystem::path name;
 
 				switch (std::tolower(confirmation))
 				{
 					// User wants to save changes
 					case 'y':
-						if (!expenses.Save())
+						std::cout << "Please enter file name: ";
+						std::cin >> name;
+						
+						if (!expenses.Save(name))
+						{
 							Complain(repl, "Failed to save file! Try: save <PATH>");
+						}
+						else
+						{
+							Success(repl);
+							return 0;
+						}
+							
 						break;
 					// User doesn't want to save changes
 					case 'n':
